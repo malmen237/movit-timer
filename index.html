@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movit Timer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🕐 movIT</h1>
+            <p>Take breaks and move around!</p>
+        </header>
+        
+        <div class="timer-display">
+            <div class="time" id="timeDisplay">01:00:00</div>
+            <div class="status" id="statusDisplay">Ready to start</div>
+        </div>
+        
+        <div class="controls">
+            <div class="time-selector">
+                <label for="duration">Timer Duration:</label>
+                <select id="duration">
+                    <option value="1">1 minute (test)</option>
+                    <option value="15">15 minutes</option>
+                    <option value="30">30 minutes</option>
+                    <option value="45">45 minutes</option>
+                    <option value="60" selected>1 hour</option>
+                    <option value="90">1.5 hours</option>
+                    <option value="120">2 hours</option>
+                </select>
+            </div>
+            
+            <div class="buttons">
+                <button id="startBtn" class="btn btn-start">Start Timer</button>
+                <button id="stopBtn" class="btn btn-stop" disabled>Stop Timer</button>
+                <button id="resetBtn" class="btn btn-reset">Reset</button>
+            </div>
+        </div>
+        
+        <div class="info">
+            <p>💡 The timer will show a full-screen popup when it's time to move!</p>
+            <p>🔄 Click "Restart Timer" in the popup to start again.</p>
+        </div>
+    </div>
+    
+    <script src="renderer.js"></script>
+</body>
+</html>

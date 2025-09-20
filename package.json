@@ -1,0 +1,26 @@
+{
+  "name": "movit-timer",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A desktop timer to remind you to move and take breaks",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "keywords": [
+    "timer",
+    "break",
+    "reminder",
+    "desktop"
+  ],
+  "author": "malmen237",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/malmen237/movit-timer.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0"
+  }
+}
