@@ -4,7 +4,7 @@ A desktop timer application to remind you to take breaks and move around during 
 
 ## Features
 
-- ⏰ Customizable timer duration (15 min to 2 hours)
+- ⏰ Customizable timer duration (15 min to 1 hour)
 - 🚨 Full-screen blocking popup when timer expires
 - 🎯 System tray integration for easy access
 - 🔄 One-click restart functionality
