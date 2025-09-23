@@ -13,11 +13,15 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Popup controls
   closePopup: () => ipcRenderer.invoke("close-popup"),
   restartTimer: () => ipcRenderer.invoke("restart-timer"),
+  forceClosePopup: () => ipcRenderer.invoke("force-close-popup"),
 
   // Event listeners
   onTimerUpdate: (callback) => ipcRenderer.on("timer-update", callback),
+  onTimerStarted: (callback) => ipcRenderer.on("timer-started", callback),
   onTimerStopped: (callback) => ipcRenderer.on("timer-stopped", callback),
   onTimerReset: (callback) => ipcRenderer.on("timer-reset", callback),
+  onTimerSleepResumed: (callback) =>
+    ipcRenderer.on("timer-sleep-resumed", callback),
 
   // Remove listeners
   removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel),

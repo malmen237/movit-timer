@@ -27,6 +27,12 @@ window.electronAPI.onTimerUpdate((event, timeRemaining) => {
   updateDisplay();
 });
 
+window.electronAPI.onTimerStarted(() => {
+  isRunning = true;
+  updateButtons();
+  statusDisplay.textContent = "Timer running...";
+});
+
 window.electronAPI.onTimerStopped(() => {
   isRunning = false;
   updateButtons();
@@ -39,6 +45,15 @@ window.electronAPI.onTimerReset((event, timeRemaining) => {
   updateDisplay();
   updateButtons();
   statusDisplay.textContent = "Timer reset";
+});
+
+window.electronAPI.onTimerSleepResumed((event, data) => {
+  console.log("Timer sleep resumed:", data);
+  if (data.wasRunning) {
+    statusDisplay.textContent = `Timer was auto-stopped during sleep (${Math.floor(
+      data.sleepDuration / 60
+    )} min sleep)`;
+  }
 });
 
 function startTimer() {
