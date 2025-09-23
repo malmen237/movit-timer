@@ -33,7 +33,6 @@ npm start
 ## System Tray
 
 The app runs in your system tray. Right-click the tray icon to:
-- Show/hide the timer window
 - Start/stop the timer
 - Quit the application
 
@@ -45,5 +44,5 @@ The app runs in your system tray. Right-click the tray icon to:
 ## Default Settings
 
 - Default timer: 1 hour
-- Available durations: 15, 30, 45, 60, 90, 120 minutes
+- Available durations: 15, 30, 45, 60 minutes
 - Popup is always on top and full-screen
