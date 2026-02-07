@@ -10,36 +10,35 @@
 <body>
     <div class="container">
         <header>
-            <h1>🕐 mov-IT</h1>
-            <p>Take breaks and move around!</p>
+            <h1>mov-IT</h1>
+            <p>Take breaks. Move around. Feel better.</p>
         </header>
-        
+
         <div class="timer-display">
             <div class="time" id="timeDisplay">01:00:00</div>
             <div class="status" id="statusDisplay">Ready to start</div>
         </div>
-        
+
         <div class="controls">
             <div class="time-selector">
-                <label for="duration">Timer Duration:</label>
+                <label for="duration">Duration</label>
                 <select id="duration">
+                  <option value="1">1 minute(test)</option>
                     <option value="15">15 minutes</option>
                     <option value="30">30 minutes</option>
                     <option value="45">45 minutes</option>
                     <option value="60" selected>1 hour</option>
-                    
                 </select>
             </div>
-            
+
             <div class="buttons">
-                <button id="startBtn" class="btn btn-start">Start Timer</button>
-                <button id="stopBtn" class="btn btn-stop" disabled>Stop Timer</button>
+                <button id="startBtn" class="btn btn-start">Start</button>
+                <button id="stopBtn" class="btn btn-stop" disabled>Stop</button>
                 <button id="resetBtn" class="btn btn-reset">Reset</button>
             </div>
         </div>
-        
     </div>
-    
+
     <script src="renderer.js"></script>
 </body>
 </html>

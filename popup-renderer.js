@@ -1,62 +1,88 @@
-// Use the secure electronAPI from preload script
-
-// Wait for DOM to be ready
 document.addEventListener("DOMContentLoaded", () => {
-  // DOM elements
   const restartBtn = document.getElementById("restartBtn");
   const closeBtn = document.getElementById("closeBtn");
 
-  // Check if electronAPI is available
   if (!window.electronAPI) {
     console.error("electronAPI not available");
     return;
   }
 
-  // Event listeners
+  let audioCtx = null;
+  let alarmInterval = null;
+
+  function getAudioContext() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  function playAlarmBurst() {
+    try {
+      const ctx = getAudioContext();
+      const now = ctx.currentTime;
+
+      function tone(start, freq, duration, volume) {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = "square";
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(volume, start);
+        gain.gain.setValueAtTime(volume, start + duration * 0.7);
+        gain.gain.exponentialRampToValueAtTime(0.01, start + duration);
+        osc.start(start);
+        osc.stop(start + duration);
+      }
+
+      tone(now, 880, 0.15, 0.5);
+      tone(now + 0.2, 1100, 0.15, 0.5);
+      tone(now + 0.4, 880, 0.15, 0.5);
+      tone(now + 0.6, 1100, 0.15, 0.5);
+      tone(now + 1.0, 660, 0.4, 0.4);
+    } catch (e) {
+      console.error("Audio alert failed:", e);
+    }
+  }
+
+  function startAlarm() {
+    playAlarmBurst();
+    alarmInterval = setInterval(playAlarmBurst, 4000);
+  }
+
+  function stopAlarm() {
+    if (alarmInterval) {
+      clearInterval(alarmInterval);
+      alarmInterval = null;
+    }
+  }
+
+  startAlarm();
+
   restartBtn.addEventListener("click", () => {
-    console.log("Restart button clicked");
+    stopAlarm();
     try {
       window.electronAPI.restartTimer();
     } catch (error) {
       console.error("Error restarting timer:", error);
-      // Fallback: try to force close and restart
       window.electronAPI.forceClosePopup();
     }
   });
 
   closeBtn.addEventListener("click", () => {
-    console.log("Close button clicked");
+    stopAlarm();
     try {
       window.electronAPI.closePopup();
     } catch (error) {
       console.error("Error closing popup:", error);
-      // Fallback: try to force close
       window.electronAPI.forceClosePopup();
     }
   });
 
-  // Add some visual feedback
-  restartBtn.addEventListener("mouseenter", () => {
-    restartBtn.classList.add("btn-hover");
-    restartBtn.classList.remove("btn-normal");
-  });
-
-  restartBtn.addEventListener("mouseleave", () => {
-    restartBtn.classList.add("btn-normal");
-    restartBtn.classList.remove("btn-hover");
-  });
-
-  closeBtn.addEventListener("mouseenter", () => {
-    closeBtn.classList.add("btn-hover");
-    closeBtn.classList.remove("btn-normal");
-  });
-
-  closeBtn.addEventListener("mouseleave", () => {
-    closeBtn.classList.add("btn-normal");
-    closeBtn.classList.remove("btn-hover");
-  });
-
-  // Add keyboard shortcuts
   document.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
@@ -67,25 +93,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Focus the restart button by default
   restartBtn.focus();
 
-  // Add timeout mechanism to prevent stuck popups
-  // If no interaction for 5 minutes, auto-close the popup
   let inactivityTimer = setTimeout(() => {
-    console.log("Popup timeout - auto-closing due to inactivity");
+    stopAlarm();
     try {
       window.electronAPI.forceClosePopup();
     } catch (error) {
       console.error("Error in timeout close:", error);
     }
-  }, 5 * 60 * 1000); // 5 minutes
+  }, 5 * 60 * 1000);
 
-  // Reset timeout on any interaction
   const resetTimeout = () => {
     clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
-      console.log("Popup timeout - auto-closing due to inactivity");
+      stopAlarm();
       try {
         window.electronAPI.forceClosePopup();
       } catch (error) {
@@ -94,7 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 5 * 60 * 1000);
   };
 
-  // Reset timeout on any user interaction
   document.addEventListener("click", resetTimeout);
   document.addEventListener("keydown", resetTimeout);
   document.addEventListener("mousemove", resetTimeout);
