@@ -1,20 +1,16 @@
-# Use Node.js runtime
 FROM node:20-alpine
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
 
-# Install dependencies
 RUN npm ci --only=production
 
-# Copy application files
-COPY . .
+COPY web-server.js index.html web-renderer.js sw.js styles.css entrypoint.sh ./
+COPY assets/ ./assets/
 
-# Expose port
+RUN chmod +x entrypoint.sh
+
 EXPOSE 8090
 
-# Start the application
-CMD ["node", "web-server.js"]
+ENTRYPOINT ["./entrypoint.sh"]
