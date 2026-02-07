@@ -12,7 +12,7 @@
     <div class="container">
         <header>
             <h1>mov-IT</h1>
-            <p>Take breaks and move around!</p>
+            <p>Take breaks. Move around. Feel better.</p>
         </header>
 
         <div class="timer-display">
@@ -22,7 +22,7 @@
 
         <div class="controls">
             <div class="time-selector">
-                <label for="duration">Timer Duration:</label>
+                <label for="duration">Duration</label>
                 <select id="duration">
                     <option value="1">1 minute (test)</option>
                     <option value="15">15 minutes</option>
@@ -33,8 +33,8 @@
             </div>
 
             <div class="buttons">
-                <button id="startBtn" class="btn btn-start">Start Timer</button>
-                <button id="stopBtn" class="btn btn-stop" disabled>Stop Timer</button>
+                <button id="startBtn" class="btn btn-start">Start</button>
+                <button id="stopBtn" class="btn btn-stop" disabled>Stop</button>
                 <button id="resetBtn" class="btn btn-reset">Reset</button>
             </div>
         </div>
@@ -42,27 +42,22 @@
 
     <div id="breakPopup" class="break-overlay">
         <div class="break-content">
-            <div class="break-icon">🤸‍♀️ 🙆‍♀️</div>
-            <h1>Time to Move!</h1>
-            <p class="break-message">You've been sitting for too long. Time to get up and stretch!</p>
+            <h1>Time to move.</h1>
+            <p class="break-message">You've been sitting long enough. Stand up, stretch, take a walk.</p>
 
             <div class="break-suggestions">
-                <h3>Quick Movement Ideas:</h3>
                 <ul>
-                    <li>🦵 Take a short walk around the room</li>
-                    <li>🤸‍♀️ Do some stretches</li>
-                    <li>👀 Look away from the screen for 20 seconds</li>
-                    <li>💧 Get a glass of water</li>
-                    <li>🪟 Look out the window</li>
+                    <li>Take a short walk</li>
+                    <li>Stretch your back and shoulders</li>
+                    <li>Look away from the screen</li>
+                    <li>Get a glass of water</li>
                 </ul>
             </div>
 
             <div class="break-actions">
-                <button id="restartBtn" class="btn btn-primary">Restart Timer</button>
-                <button id="dismissBtn" class="btn btn-secondary">Dismiss</button>
+                <button id="restartBtn" class="btn btn-restart">Restart Timer</button>
+                <button id="dismissBtn" class="btn btn-dismiss">Dismiss</button>
             </div>
-
-            <p class="break-footer">Take your time - come back when you're ready!</p>
         </div>
     </div>
 
