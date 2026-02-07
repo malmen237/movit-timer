@@ -1,4 +1,5 @@
 let pollingTimer = null;
+let notifiedForCurrentExpiry = false;
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) =>
@@ -7,6 +8,7 @@ self.addEventListener("activate", (event) =>
 
 self.addEventListener("message", (event) => {
   if (event.data === "start-polling") {
+    notifiedForCurrentExpiry = false;
     startPolling();
   } else if (event.data === "stop-polling") {
     stopPolling();
@@ -19,7 +21,8 @@ function startPolling() {
     try {
       const res = await fetch("/api/timer/status");
       const status = await res.json();
-      if (status.expired) {
+      if (status.expired && !notifiedForCurrentExpiry) {
+        notifiedForCurrentExpiry = true;
         stopPolling();
         self.registration.showNotification("Time to Move!", {
           body: "You've been working for a while. Get up and stretch!",
@@ -32,7 +35,9 @@ function startPolling() {
           client.postMessage("timer-expired");
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error("[SW] Polling failed:", e);
+    }
   }, 5000);
 }
 

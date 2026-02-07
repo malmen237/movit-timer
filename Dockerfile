@@ -6,10 +6,15 @@ COPY package*.json ./
 
 RUN npm ci --only=production
 
-COPY web-server.js index.html web-renderer.js sw.js styles.css entrypoint.sh ./
-COPY assets/ ./assets/
+COPY web-server.js entrypoint.sh ./
+COPY public/ ./public/
 
-RUN chmod +x entrypoint.sh
+RUN chmod +x entrypoint.sh && \
+    addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app
+
+USER nodejs
 
 EXPOSE 8090
 

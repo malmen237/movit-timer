@@ -1,7 +1,4 @@
 #!/bin/sh
-
-# Set the PORT environment variable for the Node.js app
+set -e
 export PORT="${PORT:-8090}"
-
-# Start the Node.js application
 exec node web-server.js

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; media-src 'self';">
     <title>Movit Timer</title>
     <link rel="icon" href="/assets/icon.png">
     <link rel="stylesheet" href="styles.css">
@@ -24,7 +24,6 @@
             <div class="time-selector">
                 <label for="duration">Duration</label>
                 <select id="duration">
-                    <option value="1">1 minute (test)</option>
                     <option value="15">15 minutes</option>
                     <option value="30">30 minutes</option>
                     <option value="45">45 minutes</option>

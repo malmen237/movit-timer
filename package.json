@@ -2,19 +2,17 @@
   "name": "movit-timer",
   "private": true,
   "version": "1.0.0",
-  "description": "A desktop timer to remind you to move and take breaks",
-  "main": "main.js",
+  "description": "A web timer to remind you to move and take breaks",
+  "main": "web-server.js",
   "scripts": {
-    "start": "electron .",
-    "dev": "electron . --dev",
-    "web": "node web-server.js",
+    "start": "node web-server.js",
     "build": "echo 'No build step needed for web version'"
   },
   "keywords": [
     "timer",
     "break",
     "reminder",
-    "desktop"
+    "web"
   ],
   "author": "malmen237",
   "repository": {
@@ -24,8 +22,5 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2"
-  },
-  "devDependencies": {
-    "electron": "^28.0.0"
   }
 }

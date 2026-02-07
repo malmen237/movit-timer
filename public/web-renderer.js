@@ -32,9 +32,9 @@ function updateDisplay() {
   statusDisplay.textContent = isTimerRunning ? "Timer running..." : "Ready to start";
 }
 
-async function apiCall(endpoint, method = "GET") {
+async function apiCall(endpoint, options = {}) {
   try {
-    const response = await fetch(`/api/timer/${endpoint}`, { method });
+    const response = await fetch(`/api/timer/${endpoint}`, options);
     return await response.json();
   } catch (error) {
     console.error("API call failed:", error);
@@ -63,7 +63,7 @@ function startPolling() {
       hasAlerted = true;
       showBreakAlert();
     }
-  }, 2000);
+  }, 1000);
 }
 
 function stopPolling() {
@@ -74,44 +74,38 @@ function stopPolling() {
 }
 
 async function startTimer() {
-  const result = await apiCall("start", "POST");
+  const result = await apiCall("start", { method: "POST" });
   if (result.success) {
     hasAlerted = false;
-    isTimerRunning = true;
-    updateDisplay();
     startPolling();
     tellServiceWorker("start-polling");
   }
 }
 
 async function stopTimer() {
-  const result = await apiCall("stop", "POST");
+  const result = await apiCall("stop", { method: "POST" });
   if (result.success) {
-    isTimerRunning = false;
-    updateDisplay();
     tellServiceWorker("stop-polling");
   }
 }
 
 async function resetTimer() {
-  const result = await apiCall("reset", "POST");
+  const result = await apiCall("reset", { method: "POST" });
   if (result.success) {
     hasAlerted = false;
-    timeRemaining = selectedDuration;
-    isTimerRunning = false;
-    updateDisplay();
     hideBreakPopup();
     tellServiceWorker("stop-polling");
   }
 }
 
 async function setTimerDuration(minutes) {
-  const result = await apiCall(`set?minutes=${minutes}`, "POST");
+  const result = await apiCall("set", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ minutes }),
+  });
   if (result.success) {
-    selectedDuration = minutes * 60;
-    timeRemaining = selectedDuration;
     hasAlerted = false;
-    updateDisplay();
   }
 }
 
@@ -146,6 +140,11 @@ function playAlarmBurst() {
       gain.gain.exponentialRampToValueAtTime(0.01, start + duration);
       osc.start(start);
       osc.stop(start + duration);
+
+      osc.onended = () => {
+        gain.disconnect();
+        osc.disconnect();
+      };
     }
 
     tone(now, 880, 0.15, 0.5);
@@ -209,24 +208,19 @@ function showBreakAlert() {
 }
 
 async function handleRestart() {
-  const result = await apiCall("restart", "POST");
+  const result = await apiCall("restart", { method: "POST" });
   if (result.success) {
     hasAlerted = false;
-    isTimerRunning = true;
     hideBreakPopup();
-    updateDisplay();
     tellServiceWorker("start-polling");
   }
 }
 
 async function handleDismiss() {
-  const result = await apiCall("dismiss", "POST");
+  const result = await apiCall("dismiss", { method: "POST" });
   if (result.success) {
     hasAlerted = false;
-    timeRemaining = selectedDuration;
-    isTimerRunning = false;
     hideBreakPopup();
-    updateDisplay();
     tellServiceWorker("stop-polling");
   }
 }
@@ -243,11 +237,20 @@ durationSelect.addEventListener("change", (e) => {
   setTimerDuration(parseInt(e.target.value));
 });
 
+window.addEventListener("beforeunload", () => {
+  stopAlarmLoop();
+  stopPolling();
+  if (audioCtx && audioCtx.state !== "closed") {
+    audioCtx.close();
+  }
+});
+
 // --- Init ---
 
 document.addEventListener("DOMContentLoaded", async () => {
   if ("serviceWorker" in navigator) {
     const reg = await navigator.serviceWorker.register("/sw.js");
+    reg.update();
     await navigator.serviceWorker.ready;
 
     navigator.serviceWorker.addEventListener("message", (event) => {
